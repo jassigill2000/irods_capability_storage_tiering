@@ -16,7 +16,6 @@ def main():
 
     args = parser.parse_args()
 
-    output_root_directory = args.output_root_directory
     built_packages_root_directory = args.built_packages_root_directory
     package_suffix = irods_python_ci_utilities.get_package_suffix()
     os_specific_directory = irods_python_ci_utilities.append_os_specific_directory(built_packages_root_directory)
@@ -46,7 +45,8 @@ def main():
         else:
             irods_python_ci_utilities.subprocess_get_output(['sudo', 'su', '-', 'irods', '-c', 'python2 scripts/run_tests.py --xml_output --run_s {0} 2>&1 | tee {1}; exit $PIPESTATUS'.format(test_name, test_output_file)], check_rc=True)
     finally:
-        if output_root_directory:
+        if args.output_root_directory:
+            output_root_directory = os.path.join(args.output_root_directory, test_name)
             irods_python_ci_utilities.gather_files_satisfying_predicate('/var/lib/irods/log', output_root_directory, lambda x: True)
             shutil.copy('/var/lib/irods/log/test_output.log', output_root_directory)
             #shutil.copytree('/var/lib/irods/test-reports', os.path.join(output_root_directory, 'test-reports'))
