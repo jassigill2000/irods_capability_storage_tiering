@@ -33,7 +33,7 @@ def main():
     try:
         test_output_file = '/var/lib/irods/log/test_output.log'
 
-        if args.munge_path is not None or args.munge_path != '':
+        if args.munge_path is not None or args.munge_path != 'None' or args.munge_path != '':
             irods_python_ci_utilities.subprocess_get_output(['sudo', 'su', '-', 'irods', '-c', 'cd scripts; {0}; python2 run_tests.py --xml_output --run_s {1} 2>&1 | tee {2}; exit $PIPESTATUS'.format(args.munge_path, test_name, test_output_file)], check_rc=True)
         else:
             irods_python_ci_utilities.subprocess_get_output(['sudo', 'su', '-', 'irods', '-c', 'python2 scripts/run_tests.py --xml_output --run_s {0} 2>&1 | tee {1}; exit $PIPESTATUS'.format(test_name, test_output_file)], check_rc=True)
